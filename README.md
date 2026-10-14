@@ -170,9 +170,6 @@ The benchmark data is not distributed in this repository. Download it here:
 
 **https://drive.google.com/drive/folders/1_9K8hwZkh4puRLKROjoN685cJnAFUSZc?usp=sharing**
 
-The Drive folder is laid out like the dataset the experiments expect — one directory per CVE, plus a launch
-manifest and the advisory corpus:
-
 ```
 manifest.yaml            one entry per CVE: case id, split, product, versions, lab, verification
 CVE-YYYY-NNNNN/          one directory per case (27 held-out targets), each holding
@@ -180,9 +177,6 @@ CVE-YYYY-NNNNN/          one directory per case (27 held-out targets), each hold
   hidden/                  host-side truth and the case oracle (never mounted into a target container)
   public_task.yml          the case's public surface
   lab/                     the real-CVE lab, where one exists: vulnerable + patched Dockerfiles and the PoC
-splits/validation/, splits/train/   the remaining frozen cases, same per-case layout
-rag_corpus/              where the advisory corpus lives (the retrieval knowledge base)
-dataset-metadata/        frozen-dataset metadata: lock, snapshot manifest, robustness variants
 ```
 
 The held-out verification expects, from that folder:
