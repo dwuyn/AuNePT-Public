@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint, types and smoke checks
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip poetry
+          poetry sync --with dev
+
+      - name: Lint (ruff)
+        continue-on-error: true
+        run: poetry run ruff check src/
+
+      - name: Type check
+        continue-on-error: true
+        run: poetry run mypy src
+
+      - name: Validate Poetry lock
+        run: poetry check --lock
+
+      - name: Validate installed dependencies
+        run: poetry run pip check
+
+      - name: BudgetTier smoke test
+        run: |
+          poetry run python - <<'EOF'
+          from src.pipeline.budget import BudgetTier, ResourceBudget
+          for tier in BudgetTier:
+              lim = tier.to_limits()
+              b = ResourceBudget(lim)
+              assert b.remaining_seconds() > 0
+          print('BudgetTier OK')
+          EOF
+
+      - name: Planning smoke test
+        run: |
+          poetry run python - <<'EOF'
+          from src.planning import DifficultyEstimator, BudgetPolicy
+          e = DifficultyEstimator()
+          v = e.estimate(remaining_steps=30, max_steps=60, mean_evidence_confidence=0.6,
+                         token_fraction_used=0.3, historical_success_rate=0.5)
+          assert 0 <= v.difficulty_score <= 1
+          p = BudgetPolicy()
+          a = p.score_action('c1','svc','CVE-2021-X','metasploit',
+                             p_success=0.7, expected_evidence_gain=0.5,
+                             normalized_cost=0.3, risk=0.2, difficulty=v)
+          assert a.policy_score != 0
+          print('Planning OK:', round(v.difficulty_score, 3), round(a.policy_score, 3))
+          EOF

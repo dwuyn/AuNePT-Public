@@ -1,0 +1,268 @@
+# PentestAgent Configuration Template
+# Copy this file to configs/config.yaml and fill in your values.
+# configs/config.yaml is gitignored to prevent credential leaks.
+models:
+  # Any OpenAI-compatible endpoint (the profile name the verification harness pins):
+  # export AUNEPT_MODEL=... AUNEPT_BASE_URL=... AUNEPT_API_KEY=...  before running.
+  aunept_proxy:
+    provider: openai_compat
+    model: ${AUNEPT_MODEL}
+    base_url: ${AUNEPT_BASE_URL}
+    api_key: ${AUNEPT_API_KEY}
+    temperature: 0
+    timeout: 120
+    max_tokens: 1024
+
+  openai:
+    provider: openai
+    model: gpt-4o-mini
+    temperature: 0
+    timeout: 300
+    api_key: ${OPENAI_API_KEY}
+
+  deepseek:
+    provider: deepseek
+    model: deepseek-chat
+    temperature: 0
+    timeout: 300
+    api_key: ${DEEPSEEK_API_KEY}
+
+  gemini:
+    provider: gemini
+    model: gemini-2.5-flash
+    temperature: 0
+    timeout: 300
+    api_key: ${GOOGLE_API_KEY}
+
+  vertexai:
+    provider: vertexai
+    model: gemini-2.5-flash
+    project: ${GCP_PROJECT_ID}
+    location: ${GCP_LOCATION}
+    temperature: 0
+    timeout: 300
+
+  ollama:
+    provider: ollama
+    model: qwen3.5:9b
+    base_url: "http://localhost:11434"
+    api_key: "ollama"
+
+  vllm:
+    provider: openai
+    model: qwen3.6-27b
+    base_url: "http://localhost:8000/v1/"
+    api_key: "sk-placeholder"
+    temperature: 0
+    timeout: 300
+
+  qwen3_coder_30b:
+    provider: openai
+    model: Qwen3-Coder-30B-A3B-Instruct
+    base_url: ${QWEN_BASE_URL}
+    api_key: ${QWEN_API_KEY}
+    temperature: 0
+    timeout: 300
+
+  gpt_oss_20b:
+    provider: openai
+    model: gpt-oss-20b
+    base_url: ${GPT_OSS_BASE_URL}
+    api_key: ${GPT_OSS_API_KEY}
+    temperature: 0
+    timeout: 300
+
+  gemini_3_5_flash:
+    provider: gemini
+    model: gemini-3.5-flash
+    temperature: 0
+    timeout: 300
+    api_key: ${GOOGLE_API_KEY}
+
+# Experiment profiles are resource contracts, not aliases into `models`.
+# Replace benchmark-pinned with the actual immutable deployed revision before
+# creating policy.lock.json/dataset.lock.json.
+vertex_profiles:
+  gemini-3.5-flash:
+    provider: vertexai
+    resource_id: gemini-3.5-flash
+    resource_revision: benchmark-pinned
+    region: us-central1
+    project: ${GCP_PROJECT_ID}
+    pricing: {input_per_million: 0.0, output_per_million: 0.0}
+  gemini-3.6-flash:
+    provider: vertexai
+    resource_id: gemini-3.6-flash
+    resource_revision: benchmark-pinned
+    region: us-central1
+    project: ${GCP_PROJECT_ID}
+    pricing: {input_per_million: 0.0, output_per_million: 0.0}
+  gemma-4-26b-a4b-it:
+    provider: vertexai
+    resource_id: gemma-4-26b-a4b-it
+    resource_revision: benchmark-pinned
+    region: us-central1
+    project: ${GCP_PROJECT_ID}
+    pricing: {input_per_million: 0.0, output_per_million: 0.0}
+
+# CVE scoring weight configuration
+cve_scoring:
+  weights:
+    lang_class:
+      "c1": 0.8
+      "c2": 1.0
+      "c3": 1.1
+
+    vul_type:
+      "Code Execution": 10
+      "Privilege Escalation": 8
+      "Information Leak": 6
+      "Bypass": 6
+      "Denial of Service": 2
+
+    exp_maturity:
+      "Exploit": 1
+      "PoC+": 0.8
+      "PoC": 0.6
+      "None": 0.3
+
+    exp_flexibility:
+      "flex": 0.8
+      "unflex": 1.0
+
+    isRemote:
+      "True": 20
+      "False": 0
+
+    attack_complexity:
+      code_attack_evasion:
+        "True": 5
+        "False": 0
+      code_info_dependency:
+        "True": 5
+        "False": 0
+      code_attack_condition:
+        "True": 5
+        "False": 0
+      code_attack_probability:
+        "True": 5
+        "False": 0
+      code_privilege_required:
+        "True": 5
+        "False": 0
+      code_user_interaction:
+        "True": 5
+        "False": 0
+      doc_attack_evasion:
+        "True": 5
+        "False": 0
+      doc_info_dependency:
+        "True": 5
+        "False": 0
+      doc_attack_condition:
+        "True": 5
+        "False": 0
+      doc_attack_probability:
+        "True": 5
+        "False": 0
+      doc_privilege_required:
+        "True": 5
+        "False": 0
+      doc_user_interaction:
+        "True": 5
+        "False": 0
+
+    source_weights:
+      expdb: 1.1
+      gthb: 1
+      gg: 0.85
+
+    trending_score: 0.2
+
+    expdb_default_score: 20
+
+# Runtime configuration
+runtime:
+  agent_roles:
+    planner: {model: qwen3_coder_30b}
+    restore_planner: {model: qwen3_coder_30b}
+    critic: {model: qwen3_coder_30b}
+    verifier: {model: qwen3_coder_30b}
+    executor: {model: qwen3_coder_30b}
+  recon:
+    current_topic: "pentest"
+    target_ip: "REPLACE_WITH_TARGET_IP"
+    model: "vertexai"
+    memory_dir: "recon_memory"
+
+  verifier:
+    model: "vertexai"
+
+  hypothesis:
+    retrieval:
+      top_services: 5
+      per_service_cve_limit: 8
+      top_cves: 5
+      github_search_limit: 12
+      github_clone_top_k: 2
+      exploitdb_copy_top_k: 2
+      google_fallback_top_k: 1
+      enable_google_fallback: True
+      enable_vendor_refs: True
+      kev_cache_path: "data/kev/known_exploited_vulnerabilities.json"
+      candidate_cache_dir: "data/retrieval_candidates"
+    critic:
+      model: "vertexai"
+      max_rework_rounds: 1
+
+  planning:
+    economic_mode: True
+    model: "vertexai"
+    keyword: ""
+    app: ""
+    version: ""
+    vuln_type: ""
+    output_dir: "../data/exp_info"
+    cvemap:
+      fuzzy_search: True
+      max_entry: 10
+    exploitdb_dir: "/usr/share/exploitdb/"
+    retrieval:
+      top_services: 5
+      per_service_cve_limit: 8
+      top_cves: 5
+      github_search_limit: 12
+      github_clone_top_k: 2
+      exploitdb_copy_top_k: 2
+      google_fallback_top_k: 1
+      enable_google_fallback: True
+      enable_vendor_refs: True
+      kev_cache_path: "data/kev/known_exploited_vulnerabilities.json"
+      candidate_cache_dir: "data/retrieval_candidates"
+
+  execution:
+    current_topic: ""
+    repo_url: ""
+    doc_dir: "../data/exp_source"
+    target_ip: "REPLACE_WITH_TARGET_IP"
+    target_port: ""
+    attacker_ip: "127.0.0.1"
+    command_to_execute: "touch /tmp/pwned"
+    model: "vertexai"
+    mode: "deterministic_first"
+    workspace_root: "data/execution_runs"
+    max_candidates: 3
+    per_candidate_max_attempts: 3
+    command_timeout: 120
+    verify_timeout: 20
+    install_timeout: 180
+    allow_workspace_installs: True
+    llm_fallback_attempts: 3
+
+  exploit_compiler:
+    # Enable only for evaluation variants 3 and 4.  Variant 2 remains the
+    # current manual-catalog baseline.
+    automatic_known_sources: false
+    automatic_metasploit: false
+    attacker_image: "pentest-agent-attacker:latest"
+    lab_network: ""

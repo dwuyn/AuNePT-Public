@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "name": "example_research_benchmark_v1",
+  "legacy_targets": 10,
+  "recent_targets": 10,
+  "patched_controls": 5,
+  "notes": "Illustrative benchmark manifest. Replace with frozen lab targets before final runs.",
+  "targets": [
+    {
+      "target_id": "t-legacy-httpd-2449",
+      "image": "lab/httpd-2.4.49",
+      "image_hash": "sha256:REPLACE",
+      "source_available_at": 1672531200,
+      "applicable_cves": ["CVE-2021-41773"],
+      "version_constraints": {"vendor": "apache", "product": "httpd",
+                               "version_start": "2.4.49", "version_end": "2.4.49"},
+      "proof_specs": {"CVE-2021-41773": {"capability": "info_read",
+                                            "accepted_evidence": ["root:x:0:0"]}},
+      "is_patched_control": false,
+      "cleanup_verifier": "httpd_cleanup",
+      "network_services": ["httpd"],
+      "noisy_mirrors": ["t-legacy-httpd-2449-noisy"]
+    },
+    {
+      "target_id": "control-httpd-249",
+      "image": "lab/httpd-2.4.49-patched",
+      "image_hash": "sha256:REPLACE",
+      "source_available_at": 1672531200,
+      "applicable_cves": ["CVE-2021-41773"],
+      "version_constraints": {"vendor": "apache", "product": "httpd",
+                               "version_start": "2.4.49", "version_end": "2.4.49"},
+      "proof_specs": {"CVE-2021-41773": {"capability": "info_read",
+                                            "accepted_evidence": ["root:x:0:0"]}},
+      "is_patched_control": true,
+      "cleanup_verifier": "httpd_cleanup",
+      "network_services": ["httpd"],
+      "noisy_mirrors": []
+    }
+  ]
+}

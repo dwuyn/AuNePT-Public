@@ -1,0 +1,117 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Credentials and secrets — NEVER commit
+.env
+*.key
+*.pem
+*-key.json
+google-key.json
+service_account*.json
+credentials*.json
+*.p12
+
+# Active config (contains target IPs, keys); track the .example template instead
+configs/config.yaml
+
+# Runtime state and artifacts
+recon_state.json
+recon_memory/
+data/
+logs/
+planning_output/
+
+# Dataset lab payloads — never commit
+data_test/
+
+# Scan output files
+*.gnmap
+*.nmap
+*.xml
+
+# Testing / coverage
+.pytest_cache/
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+cover/
+
+# Linter caches
+.ruff_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+*.log
+*.manifest
+*.spec
+.ipynb_checkpoints
+.pdm.toml
+__pypackages__/
+.pybuilder/
+target/
+
+# Secrets and local-only files
+*.minisign-passphrase
+.env.*
+*.tar
+*.tar.gz
+*.zip
+*.zst
+
+# Local scratch
+samples/
+tmp/
+scratch/
