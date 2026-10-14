@@ -1,0 +1,120 @@
+[project]
+name = "aunept"
+version = "0.4.0"
+description = "AuNePT — Autonomous Network Penetration Testing under Partial Observability via Evidence-Constrained Decision Making"
+authors = [
+    {name = "Nguyen Le Xuan"},
+    {name = "Nguyen Tran Dinh"},
+    {name = "Quyen Nguyen Huu"},
+    {name = "Van-Hau Pham"},
+]
+license = "Apache-2.0"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+
+dependencies = [
+    # ── Orchestration ────────────────────────────────────────────────────────
+    "langgraph>=0.2.0",
+    "langgraph-checkpoint-sqlite>=1.0.0",
+    "pydantic>=2.11,<3",
+    "pydantic-settings>=2.0.0",
+    # ── LangChain core (used by graph nodes and agents) ──────────────────────
+    "langchain-core>=0.3.75,<0.4",
+    "langchain-community>=0.3.27,<0.4",
+    "langchain-google-vertexai>=2.0.0",
+    # ── Google GenAI SDK (Vertex AI, Gemini, Gemma) ──────────────────────────
+    "google-genai==1.56.0",
+    # ── HTTP / data ──────────────────────────────────────────────────────────
+    "httpx>=0.27",
+    "pyyaml>=6.0",
+    "packaging>=24.0",
+    "gitpython>=3.1",
+    # ── Misc runtime utils ───────────────────────────────────────────────────
+    "tqdm>=4.67",
+    "msgpack>=1.1,<2",
+    "certifi==2025.11.12",
+    "urllib3==2.5.0",
+    "cryptography==44.0.3",
+]
+
+[project.optional-dependencies]
+benchmark = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.5",
+]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.5",
+    "mypy>=1.10",
+    "scipy==1.15.3",
+    "deep-translator==1.11.4",
+    "spacy==3.8.2",
+    "click>=8.0,<9",
+    "langdetect==1.0.9",
+    "readability-lxml==0.8.1",
+    "lxml-html-clean>=0.4,<1",
+    "inscriptis==2.5.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+# The vendored helper modules predate the framework surface; keep the lint gate
+# focused on code that is materialized into production images.
+exclude = ["utils", ".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]
+
+[tool.poetry]
+package-mode = false
+
+[tool.mypy]
+python_version = "3.12"
+
+[[tool.mypy.overrides]]
+module = [
+    "deep_translator.*",
+    "inscriptis.*",
+    "langdetect.*",
+    "llama_index.*",
+    "msgpack.*",
+    "readability.*",
+    "scipy.*",
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+    "langchain_deepseek.*",
+    "langchain_google_genai.*",
+    "langchain_ollama.*",
+    "langchain_openai.*",
+]
+ignore_missing_imports = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "pytest (>=8.0)",
+    "pytest-cov (>=5.0)",
+    "ruff (>=0.5)",
+    "mypy (>=1.10)",
+    "scipy (==1.15.3)",
+    "deep-translator (==1.11.4)",
+    "spacy (==3.8.2)",
+    "click (>=8.0,<9)",
+    "langdetect (==1.0.9)",
+    "readability-lxml (==0.8.1)",
+    "lxml-html-clean (>=0.4,<1)",
+    "inscriptis (==2.5.0)",
+    "types-pyyaml (>=6.0.12.20260724,<7.0.0.0)",
+    "types-requests (>=2.33.0.20260712,<3.0.0.0)",
+    "types-tqdm (>=4.70.0.20260805,<5.0.0.0)",
+]
