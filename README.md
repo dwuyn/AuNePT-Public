@@ -64,10 +64,6 @@ pyproject.toml          runtime dependencies (poetry.lock pins them)
 requirements.txt        auxiliary pin set for the vendored helpers
 ```
 
-The container image, the deployment tooling and the benchmark harness are not part of this repository: the
-framework is driven in-process by the CLI below, or by the production driver when it runs under an
-orchestrator.
-
 ## Requirements
 
 - Python 3.11 or later (`requires-python = ">=3.11,<3.13"`).
