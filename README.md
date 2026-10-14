@@ -18,8 +18,13 @@ precondition failures and applies hierarchical execution budgets. Successful acc
 **evaluator-private, per-case live success oracle** — never by the agent's own claim — and every case runs
 against a matched patched control, so apparent progress is separated from objectively supported exploitation.
 
-This repository is the framework. It contains no comparison frameworks, no benchmark data and no run
-artifacts; those are maintained separately (see [Dataset](#dataset)).
+AuNePT is evaluated against four representative frameworks —
+[PentestAgent](https://github.com/nbshenxm/pentest-agent),
+[PentestGPT](https://github.com/greydgl/pentestgpt),
+[VulnBot](https://github.com/KHenryAegis/VulnBot) and
+[HackSynth](https://github.com/aielte-research/HackSynth) — on 27 upstream CVE targets under three LLM
+backbones, with the same harness, runtime contract and evaluator for every framework. This repository
+contains the AuNePT framework itself; the benchmark data is distributed separately (see [Dataset](#dataset)).
 
 ## Architecture
 
@@ -155,10 +160,13 @@ python3 -m ruff check src
 
 ## Evaluation protocol
 
-The manuscript evaluates AuNePT against four representative frameworks (PentestAgent, PentestGPT, VulnBot,
-HackSynth) on **27 upstream CVE targets** under **three LLM backbones**
-(`gemini-3.5-flash`, `gemini-3.6-flash`, `gemma-4-26b-a4b-it`) — 405 episodes — with the same harness,
-runtime contract and evaluator for every framework. Success is the evaluator-verified live outcome success
+The manuscript evaluates AuNePT against four representative frameworks —
+[PentestAgent](https://github.com/nbshenxm/pentest-agent),
+[PentestGPT](https://github.com/greydgl/pentestgpt),
+[VulnBot](https://github.com/KHenryAegis/VulnBot) and
+[HackSynth](https://github.com/aielte-research/HackSynth) — on **27 upstream CVE targets** under **three LLM
+backbones** (`gemini-3.5-flash`, `gemini-3.6-flash`, `gemma-4-26b-a4b-it`) — 405 episodes — with the same
+harness, runtime contract and evaluator for every framework. Success is the evaluator-verified live outcome success
 rate (`OSR_live`), reported together with its matched-framework difference and the conditional
 `OSR_live|exploit`, and each target has a matched patched control. Diagnostic scores (service and version
 identification, exploit applicability, invalid-command and repeated-action rates, error recovery) separate
