@@ -196,24 +196,9 @@ The held-out verification expects, from that folder:
   its public task surface;
 - the **advisory corpus** used by product-keyed retrieval, together with its manifest and hash (a mounted
   vendor-advisory set supplies advisories the pinned corpus cannot);
-- the **run artifacts** (per-cell records, ledgers, checkpoints) that the recorded results below come from.
+- the **run artifacts** (per-cell records, ledgers, checkpoints) of the recorded runs;
 
 Point a run at the corpus with `source_snapshot_dir=<path>`, or by setting `PENTEST_SOURCE_SNAPSHOT`.
-
-## Verification recorded in this repository
-
-The framework was verified end to end with a real provider, real tool calls against live containers, and
-evaluator-only success:
-
-| Evidence | Result |
-|---|---|
-| Real-CVE lab dataset, 23 labs × {vulnerable, patched control} = 46 cells | **23/23 vulnerable `verified_success`** (real exploit confirmed outside the agent's output), **23/23 patched controls held**, 0 errors |
-| Frozen held-out split, 54 cells | **24/27 vulnerable `verified_success`** (three advisories are absent from the pinned corpus release), **27/27 fixed clean**, 0 false successes |
-| Validation split, 54 cells | **19/27 vulnerable `verified_success`**, **25/27 controls clean** |
-
-Every cell in the first table exploits a real upstream product at its affected version through the published
-PoC, and the patched build of the same product is the differential. Raw per-cell records, run directories and
-checkpoints ship with the dataset archive.
 
 ## Responsible use
 
