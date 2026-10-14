@@ -1,28 +1,22 @@
 #!/usr/bin/env python3
 """
-main.py — PentestAgent CLI entry point
+main.py — AuNePT CLI entry point
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Usage examples
 ──────────────
-# Full automated run
-python main.py run --target 10.0.0.1 --attacker 10.0.0.2
+# Full automated run against one authorized target
+python main.py run --target 10.0.0.1 --port 8080 [--attacker 10.0.0.2]
 
 # Resume a previous run
-python main.py run --target 10.0.0.1 --thread-id my-pentest-1
+python main.py run --target 10.0.0.1 --port 8080 --thread-id my-run-1
+
+# Reconnaissance only (bounded, LLM-free)
+python main.py recon --target 10.0.0.1 --port 8080
 
 # Dataset evaluation run
 python main.py run-dataset --tasks data/dataset/tasks.json --case-id case-001 \\
     --benchmark-cve-cache data/dataset/benchmark_cve.json
-
-# Run only recon (no planning/execution)
-python main.py recon --target 10.0.0.1
-
-# Run only planning against a known app/version
-python main.py plan --app phpmailer --version 5.2.17
-
-# Skip recon, execute from an existing exploit directory
-python main.py execute --target 10.0.0.1 --doc-dir ./data/exp_source/cve-2021-41773
 """
 
 from __future__ import annotations
@@ -53,7 +47,7 @@ try:
 except ImportError:
     GraphRecursionError = RuntimeError
 
-logger = setup_logging("pentest-agent")
+logger = setup_logging("aunept")
 slog = get_structured_logger()
 
 
@@ -61,7 +55,7 @@ slog = get_structured_logger()
 
 def _print_banner():
     print("\n" + "═" * 60)
-    print("  🛡  PentestAgent  —  LangGraph Orchestrated")
+    print("  🛡  AuNePT  —  LangGraph Orchestrated")
     print("═" * 60 + "\n")
 
 
@@ -321,7 +315,7 @@ def cmd_run_dataset(args):
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="pentest-agent",
+        prog="aunept",
         description="LangGraph-orchestrated LLM penetration testing agent",
     )
     sub = parser.add_subparsers(dest="command", required=True)

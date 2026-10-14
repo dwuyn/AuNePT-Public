@@ -1,9 +1,12 @@
 [project]
-name = "pentest-agent"
+name = "aunept"
 version = "0.4.0"
-description = "VeriPlanPT — Evidence-Gated Difficulty- and Budget-Aware Planning for Autonomous Network Penetration Testing"
+description = "AuNePT — Autonomous Network Penetration Testing under Partial Observability via Evidence-Constrained Decision Making"
 authors = [
-    {name = "Your Name", email = "you@example.com"}
+    {name = "Nguyen Le Xuan"},
+    {name = "Nguyen Tran Dinh"},
+    {name = "Quyen Nguyen Huu"},
+    {name = "Van-Hau Pham"},
 ]
 license = "Apache-2.0"
 readme = "README.md"
